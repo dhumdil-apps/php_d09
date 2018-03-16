@@ -11,22 +11,23 @@
     var cloned_item;
     var todo_list;
     var id_counter;
+    var elem;
 
     init();
 
     function init()
     {
         // register document elements
-        ft_list = document.getElementById('ft_list');
-        ft_item = document.getElementById('ft_item');
+        ft_list = $('#ft_list');
+        ft_item = $('#ft_item');
 
         // special effects (css)
-        (SPECIAL) ? document.getElementById('ft_new').classList.add("new") : noop();
-        (SPECIAL) ? ft_list.classList.add("list") : noop();
-        (SPECIAL) ? ft_item.classList.add("item") : noop();
+        (SPECIAL) ? $('#ft_new').addClass("new") : noop();
+        (SPECIAL) ? ft_list.addClass("list") : noop();
+        (SPECIAL) ? ft_item.addClass("item") : noop();
 
         // register event listener
-        document.getElementById('ft_new').addEventListener('click', newBtn);
+        $('#ft_new').on('click', newBtn);
 
         // init variables
         id_counter = 1;
@@ -69,10 +70,11 @@
     {
         // clone and add element to list
         todo_list.push(txt);
-        cloned_item = ft_item.cloneNode(true);
-        cloned_item.childNodes[1].innerHTML = txt;
-        cloned_item.id = cloned_item.id + "_" + id_counter++;
-        cloned_item.addEventListener('click', deleteItem);
+        cloned_item = ft_item.clone();
+        elem = cloned_item.find('span');
+        elem.text(txt);
+        cloned_item.attr("id", (cloned_item.attr('id') + "_" + id_counter++));
+        cloned_item.on('click', deleteItem);
         ft_list.prepend(cloned_item);
     }
 
@@ -82,20 +84,22 @@
         {
             (DEBUG) ? console.log("Deleting item id:", ev.target.parentNode.id) : noop();
 
+            elem = ft_list.find('#' + ev.target.parentNode.id);
+
             for (var i = 0, n = todo_list.length; i < n; i++)
             {
-                if (ev.target.parentNode.id === ft_list.childNodes[i].id)
+                if (ev.target.parentNode.id === elem.attr('id'))
                 {
-                    // remove event listener and remove element from DOM
-                    ft_list.childNodes[i].removeEventListener('click', deleteItem);
-                    ft_list.childNodes[i].parentNode.removeChild(ft_list.childNodes[i]);
-
                     // remove also from list and update cookies
                     todo_list.splice(todo_list.length - i - 1, 1);
                     updateCookies();
                     break;
                 }
             }
+
+            // remove event listener and remove element from DOM
+            elem.off();
+            elem.remove();
         }
     }
 
