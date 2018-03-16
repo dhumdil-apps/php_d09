@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+
+    <title>It’s over 9000</title>
+
+    <style>
+        html, body {
+            display: flex;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+        body > div {
+            display: flex;
+            margin: auto;
+        }
+        /* special css */
+        .value input {
+            position: relative;
+            width: 100px;
+            height: 30px;
+            padding: 10px 20px;
+            margin: 20px;
+            border: 1px solid #ccc;
+            font-size: 24px;
+            color: #333;
+            outline: none;
+            font-family: consolas;
+        }
+        .select select {
+            width: 100px;
+            height: 50px;
+            border: 1px solid #ccc;
+            margin: 20px;
+            font-size: 32px;
+            color: #333;
+            padding-left: 35px;
+            cursor: pointer;
+            outline: none;
+            font-family: consolas;
+        }
+        .select option {
+            display: flex;
+            margin: auto;
+            font-family: consolas;
+        }
+        .select select:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        }
+        .submit input {
+            width: 100px;
+            height: 50px;
+            border: 1px solid #ccc;
+            margin: 20px;
+            font-size: 24px;
+            color: #333;
+            background: #fff;
+            outline: none;
+            cursor: pointer;
+            font-family: consolas;
+        }
+        .submit input:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        }
+    </style>
+
+</head>
+<body>
+
+    <div>
+
+        <div id="l_value">
+            <input id="left_val" type="text" name="left_val">
+        </div>
+
+        <div id="select">
+            <select id="operation" name="operation">
+                <div>
+                    <option value="+">+</option>
+                </div>
+                <div>
+                    <option value="-">-</option>
+                </div>
+                <div>
+                    <option value="*">*</option>
+                </div>
+                <div>
+                    <option value="/">/</option>
+                </div>
+                <div>
+                    <option value="%">%</option>
+                </div>
+            </select>
+        </div>
+
+        <div id="r_value">
+            <input id="right_val" type="text" name="right_val">
+        </div>
+
+        <div id="submit">
+            <input type="submit" name="submit" value="Try me!" onclick="onClick()">
+        </div>
+
+    </div>
+
+    <script>
+
+        const DEBUG          = true; // console messages
+        const SPECIAL        = true; // special effects (css)
+        const ALERT_INTERVAL = 30000; // 30s
+
+        var leftValElement;
+        var selectElement;
+        var rightValElement;
+        var result;
+
+        init();
+
+        function init()
+        {
+            leftValElement = document.getElementById('left_val');
+            selectElement = document.getElementById('operation');
+            rightValElement = document.getElementById('right_val');
+            result = 0;
+
+            setInterval(function()
+            {
+                alert('Please, use me...');
+            }, ALERT_INTERVAL);
+
+            (SPECIAL) ? document.getElementById('l_value').classList.add("value") : noop();
+            (SPECIAL) ? document.getElementById('select').classList.add("select") : noop();
+            (SPECIAL) ? document.getElementById('r_value').classList.add("value") : noop();
+            (SPECIAL) ? document.getElementById('submit').classList.add("submit") : noop();
+        }
+
+        function onClick()
+        {
+            validate_and_calc(getIntValue(leftValElement.value), getIntValue(rightValElement.value), selectElement.value);
+        }
+
+        function getIntValue(s)
+        {
+            return (!isNaN(s)) ? (parseInt(s, 10)) : (NaN);
+        }
+
+        function validate_and_calc(x, y, op)
+        {
+            (DEBUG) ? console.log("x: ", x) : noop();
+            (DEBUG) ? console.log("y: ", y) : noop();
+            (DEBUG) ? console.log("op: ", op) : noop();
+
+            if (isNaN(x) || isNaN(y))
+            {
+                alert("Error :(");
+            }
+            else if (x < 0 || y < 0)
+            {
+                alert("Error :(");
+            }
+            else
+            {
+                result = calculate(x, y, op);
+                console.log(result);
+                alert(result);
+            }
+        }
+
+        function calculate(x, y, op)
+        {
+            switch (op)
+            {
+                case '+': return (x + y);
+                case '-': return (x - y);
+                case '*': return (x * y);
+                case '/': return ((y > 0) ?  (x / y) : "It’s over 9000!");
+                case '%': return ((y > 0) ?  (x % y) : "It’s over 9000!");
+                default:  return("Error :(");
+            }
+        }
+
+        function noop()
+        {}
+
+    </script>
+
+</body>
+</html>
