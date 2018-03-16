@@ -85,10 +85,6 @@
 
             for (var i = 0, n = todo_list.length; i < n; i++)
             {
-
-                console.log(ev.target.parentNode.id);
-                console.log(ev.target);
-
                 if (ev.target.parentNode.id === ft_list.childNodes[i].id)
                 {
                     // remove event listener and remove element from DOM
